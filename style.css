@@ -1,172 +1,415 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+}
 
 body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #1f1c2c, #928dab);
-    display: flex;
-    justify-content: center;
-    padding: 50px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding: 20px;
 }
 
 .container {
-    width: 90%;
     max-width: 900px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 25px;
-    padding: 30px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.2);
-    animation: fadeIn 1s ease forwards;
+    margin: 0 auto;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-/* Переливающаяся кнопка */
-.shimmer-button {
-    display: inline-block;
-    padding: 12px 25px;
-    margin: 10px 0;
-    color: #fff;
-    font-weight: 600;
-    text-decoration: none;
-    border-radius: 25px;
-    background: linear-gradient(270deg, #6a11cb, #2575fc, #6a11cb);
-    background-size: 600% 600%;
-    animation: shimmer 4s ease infinite;
-    text-align: center;
-}
-
-/* Toggle content */
-.toggle-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease, opacity 0.5s ease;
-    opacity: 0;
-}
-
-.toggle-content.show {
-    max-height: 200px;
-    opacity: 1;
-}
-
-/* Input */
-input[type="text"] {
-    width: 100%;
-    padding: 12px;
-    margin-top: 8px;
-    border-radius: 15px;
-    border: 1px solid rgba(255,255,255,0.3);
-    background: rgba(255,255,255,0.1);
-    color: #fff;
-    backdrop-filter: blur(8px);
-    font-size: 16px;
-}
-
-/* Ползунки */
-input[type="range"] {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 20px;
-    border-radius: 10px;
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(8px);
-    margin-top: 10px;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.5);
-    border: 1px solid rgba(255,255,255,0.7);
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    transition: 0.3s;
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
-    background: rgba(255,255,255,0.7);
-}
-
-/* Чекбокс с эффектом */
-.checkbox-wrapper {
+/* Эффект жидкого стекла */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     position: relative;
-    padding-left: 35px;
-    cursor: pointer;
-    user-select: none;
-    display: inline-block;
+    overflow: hidden;
 }
 
-.checkbox-wrapper input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-}
-
-.checkbox-wrapper .checkmark {
+.glass-effect::before {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
-    height: 25px;
-    width: 25px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.5);
-    transition: 0.3s;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    z-index: -1;
+    border-radius: 20px;
 }
 
-.checkbox-wrapper input:checked ~ .checkmark {
-    background: rgba(255,255,255,0.5);
+/* Анимация капли воды */
+@keyframes waterDrop {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
 }
 
-.checkbox-wrapper .checkmark::after {
-    content: "";
+.water-drop {
+    animation: waterDrop 3s infinite ease-in-out;
+}
+
+/* Заголовок */
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px 0;
+}
+
+.logo {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    opacity: 0.8;
+    margin-bottom: 20px;
+}
+
+.btn {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 114, 255, 0.4);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn:disabled {
+    background: rgba(255, 255, 255, 0.2);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.apply-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+}
+
+/* Основной контент */
+.settings-container {
+    display: grid;
+    gap: 25px;
+}
+
+.section {
+    padding: 25px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 24px;
+    background: linear-gradient(180deg, #00c6ff, #0072ff);
+    border-radius: 2px;
+    margin-right: 10px;
+}
+
+/* Настройки */
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-label {
+    font-size: 1.1rem;
+}
+
+.toggle-btn {
+    width: 50px;
+    height: 26px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.toggle-btn.active {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+}
+
+.toggle-btn::after {
+    content: '';
     position: absolute;
-    display: none;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 3px;
+    left: 3px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.checkbox-wrapper input:checked ~ .checkmark::after {
-    display: block;
-    left: 7px;
+.toggle-btn.active::after {
+    left: 27px;
+}
+
+.toggle-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+
+.toggle-content.active {
+    max-height: 200px;
+}
+
+/* Поля ввода */
+.input-group {
+    margin: 15px 0;
+}
+
+.text-input {
+    width: 100%;
+    padding: 15px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: #00c6ff;
+    box-shadow: 0 0 0 2px rgba(0, 198, 255, 0.3);
+}
+
+.text-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Ползунки с эффектом жидкого стекла */
+.slider-container {
+    margin: 20px 0;
+}
+
+.liquid-slider {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.slider-track {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.slider-fill {
+    position: absolute;
+    height: 100%;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    border-radius: 10px;
+    width: 50%;
+    transition: width 0.3s ease;
+}
+
+.slider-thumb {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.slider-thumb:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.slider-thumb::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.slider-value {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    min-width: 30px;
+    text-align: center;
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 5px;
+}
+
+/* Чекбокс с эффектом жидкости */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.liquid-checkbox {
+    width: 50px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    overflow: hidden;
+}
+
+.liquid-checkbox.checked {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+}
+
+.checkbox-inner {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50%;
     top: 3px;
-    width: 6px;
-    height: 12px;
-    border: solid black;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
+    left: 3px;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.liquid-checkbox.checked .checkbox-inner {
+    left: 23px;
+}
+
+.checkbox-inner::after {
+    content: '✓';
+    color: #0072ff;
+    font-weight: bold;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.1s;
+}
+
+.liquid-checkbox.checked .checkbox-inner::after {
+    opacity: 1;
+}
+
+.checkbox-label {
+    font-size: 1rem;
 }
 
 /* Анимации */
-@keyframes shimmer {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
 }
 
-@keyframes fadeIn {
-    0% {opacity:0; transform: translateY(-20px);}
-    100% {opacity:1; transform: translateY(0);}
+.ripple-effect {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
 }
 
-.button.apply-button {
-    margin-top: 20px;
-    width: 100%;
-    padding: 12px;
-    border-radius: 20px;
-    border: none;
-    background: rgba(255,255,255,0.2);
-    backdrop-filter: blur(8px);
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.button.apply-button:hover {
-    background: rgba(255,255,255,0.35);
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .section {
+        padding: 20px;
+    }
+    
+    .logo {
+        font-size: 2rem;
+    }
+    
+    .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .toggle-btn {
+        align-self: flex-end;
+    }
 }
