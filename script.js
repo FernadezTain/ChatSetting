@@ -75,23 +75,33 @@ function initializeResets() {
     farewellToggle.parentElement.appendChild(farewellReset);
 
     // Обработчик
-    greetingReset.addEventListener('click', () => toggleReset(greetingText, greetingReset));
-    farewellReset.addEventListener('click', () => toggleReset(farewellText, farewellReset));
+    greetingReset.addEventListener('click', () => toggleReset(greetingText, greetingToggle, greetingReset));
+    farewellReset.addEventListener('click', () => toggleReset(farewellText, farewellToggle, farewellReset));
 }
 
-function toggleReset(textarea, button) {
+function toggleReset(textarea, toggleSwitch, button) {
     const isActive = button.classList.contains('active');
+
     if (isActive) {
+        // Отключаем сброс
         button.classList.remove('active');
         textarea.disabled = false;
+        toggleSwitch.classList.remove('disabled');
     } else {
+        // Включаем сброс
         button.classList.add('active');
         textarea.disabled = true;
         textarea.value = "";
+        // Выключаем переключатель и скрываем поле
+        toggleSwitch.classList.remove('active');
+        const toggleId = toggleSwitch.id.replace('Toggle', 'Content');
+        const content = document.getElementById(toggleId);
+        if (content) content.classList.remove('active');
+        toggleSwitch.classList.add('disabled');
     }
+
     validateForm();
 }
-
 
 // ------------------------- Валидация формы -------------------------
 function initializeFormValidation() {
