@@ -196,30 +196,27 @@ async function applySettings() {
     const modal = document.getElementById('loadingModal');
     modal.classList.add('active');
 
-    const settings = {
-        HiText: document.getElementById('greetingText').value,
-        GoodByeText: document.getElementById('farewellText').value,
-        Mute: 'on',
-        Ban: 'off'
-    };
+    // Получаем введённый код настройки
+    const CCCtoken = document.getElementById('chatCode').value.trim();
+    const hiText = document.getElementById('greetingText').value.trim();
+    const goodbyeText = document.getElementById('farewellText').value.trim();
 
-    try {
-        const res = await fetch('/api/saveSettings', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(settings)
-        });
-        const data = await res.json();
-        const token = data.token;
+    // Формируем строку аргументов
+    let args = `CCCToken: ${CCCtoken}; `;
+    if (hiText) args += `HiText: ${hiText}; `;
+    if (goodbyeText) args += `GoodByeText: ${goodbyeText};`;
 
-        const url = `https://t.me/FernieUIBot?start=CSet$${token}`;
-        window.location.href = url;
-    } catch (err) {
-        console.error('Ошибка при отправке настроек:', err);
-        alert('Не удалось отправить настройки. Попробуйте позже.');
-    } finally {
-        setTimeout(() => modal.classList.remove('active'), 5000);
-    }
+    // Кодируем для URL
+    const encodedArgs = encodeURIComponent(args);
+
+    // Формируем ссылку для Telegram
+    const url = `https://t.me/FernieUIBot?start=CSet$${encodedArgs}`;
+
+    // Перенаправляем пользователя
+    window.location.href = url;
+
+    // Закрываем модальное через 5 секунд (для безопасности)
+    setTimeout(() => modal.classList.remove('active'), 5000);
 }
 
 // ------------------------- Эффект жидкости -------------------------
