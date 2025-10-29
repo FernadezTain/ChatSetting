@@ -9,69 +9,70 @@
 <body>
 <div class="container">
     <h1>FernieX | Настройка бота в чате</h1>
-    <button class="button" onclick="alert('Перейти на страницу настройки чата')">Настроить чат</button>
+    <a href="setup.html" class="button shimmer-button">Настроить чат</a>
 
     <div class="section">
-        <h2>Приветствие пользователей <button class="button" onclick="toggleContent('greet')">[+]</button></h2>
-        <div id="greet" class="toggle-content">
+        <h2>Приветствие пользователей <button class="toggle-btn">[+]</button></h2>
+        <div class="toggle-content">
             <input type="text" placeholder="Введите текст приветствия" maxlength="50">
         </div>
     </div>
 
     <div class="section">
-        <h2>Прощание с пользователями <button class="button" onclick="toggleContent('farewell')">[+]</button></h2>
-        <div id="farewell" class="toggle-content">
+        <h2>Прощание с пользователями <button class="toggle-btn">[+]</button></h2>
+        <div class="toggle-content">
             <input type="text" placeholder="Введите текст прощания" maxlength="50">
         </div>
     </div>
 
-    <h2 style="margin-top:30px;">-- Настройка доступов --</h2>
+    <h2>-- Настройка доступов --</h2>
 
     <div class="section">
-        <h3>Выдача мута <button class="button" onclick="toggleContent('mute')">[+]</button></h3>
-        <div id="mute" class="toggle-content">
+        <h3>Выдача мута <button class="toggle-btn">[+]</button></h3>
+        <div class="toggle-content">
             <input type="range" min="1" max="7" value="3">
         </div>
 
-        <h3>Снятие мута <button class="button" onclick="toggleContent('unmute')">[+]</button></h3>
-        <div id="unmute" class="toggle-content">
+        <h3>Снятие мута <button class="toggle-btn">[+]</button></h3>
+        <div class="toggle-content">
             <input type="range" min="1" max="7" value="3">
         </div>
 
-        <h3>Кик пользователя <button class="button" onclick="toggleContent('kick')">[+]</button></h3>
-        <div id="kick" class="toggle-content">
+        <h3>Кик пользователя <button class="toggle-btn">[+]</button></h3>
+        <div class="toggle-content">
             <input type="range" min="1" max="7" value="3">
         </div>
 
-        <h3>Блокировка пользователей <button class="button" onclick="toggleContent('ban')">[+]</button></h3>
-        <div id="ban" class="toggle-content">
+        <h3>Блокировка пользователей <button class="toggle-btn">[+]</button></h3>
+        <div class="toggle-content">
             <input type="range" min="1" max="7" value="3">
         </div>
 
-        <h3>Закрепление сообщений <button class="button" onclick="toggleContent('pin')">[+]</button></h3>
-        <div id="pin" class="toggle-content">
+        <h3>Закрепление сообщений <button class="toggle-btn">[+]</button></h3>
+        <div class="toggle-content">
             <input type="range" min="1" max="7" value="3">
         </div>
 
-        <h3>Смена ролей <button class="button" onclick="toggleContent('roles')">[+]</button></h3>
-        <div id="roles" class="toggle-content">
+        <h3>Смена ролей <button class="toggle-btn">[+]</button></h3>
+        <div class="toggle-content">
             <input type="range" min="1" max="7" value="3">
         </div>
     </div>
 
-    <h2 style="margin-top:30px;">-- Другие настройки --</h2>
+    <h2>-- Другие настройки --</h2>
     <div class="section">
-        <div class="checkbox-wrapper">
-            <input type="checkbox" id="newsletter">
-            <label for="newsletter">Рассылка</label>
-        </div>
+        <label class="checkbox-wrapper">
+            <input type="checkbox">
+            <span class="checkmark"></span>
+            Рассылка
+        </label>
     </div>
 
     <div class="section">
         <input type="text" id="chatCode" placeholder="Введите код настройки чата (до 15 символов)" maxlength="15">
     </div>
 
-    <button class="button apply-button" onclick="applySettings()">Применить настройки</button>
+    <button class="button apply-button">Применить настройки</button>
 </div>
 
 <script src="script.js"></script>
