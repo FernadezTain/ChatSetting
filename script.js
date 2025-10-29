@@ -92,6 +92,7 @@ function toggleReset(textarea, button) {
     validateForm();
 }
 
+
 // ------------------------- Валидация формы -------------------------
 function initializeFormValidation() {
     const chatCodeInput = document.getElementById('chatCode');
