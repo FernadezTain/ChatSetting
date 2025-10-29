@@ -15,16 +15,13 @@ document.addEventListener('DOMContentLoaded', function() {
     checkPerformance();
     initializeNavigation();
     initializeToggles();
+    initializeResets();
     initializeFormValidation();
 
     document.getElementById('applySettings').addEventListener('click', applySettings);
     document.getElementById('modalClose').addEventListener('click', () => {
         document.getElementById('loadingModal').classList.remove('active');
     });
-
-    document.addEventListener('touchstart', function(e) {
-        if (e.touches.length > 1) e.preventDefault();
-    }, { passive: false });
 });
 
 // ------------------------- Навигация -------------------------
@@ -49,17 +46,51 @@ function initializeNavigation() {
 function initializeToggles() {
     document.querySelectorAll('.toggle-switch').forEach(toggle => {
         toggle.addEventListener('click', function(e) {
-            handleToggleClick(this, e);
-        }, { passive: true });
+            const wasActive = toggle.classList.contains('active');
+            toggle.classList.toggle('active');
+            const toggleId = toggle.id.replace('Toggle', 'Content');
+            const content = document.getElementById(toggleId);
+            if (content) content.classList.toggle('active');
+            validateForm();
+        });
     });
 }
 
-function handleToggleClick(toggle, e) {
-    const wasActive = toggle.classList.contains('active');
-    toggle.classList.toggle('active');
-    const toggleId = toggle.id.replace('Toggle', 'Content');
-    const content = document.getElementById(toggleId);
-    if (content) content.classList.toggle('active');
+// ------------------------- Кнопки сброса -------------------------
+function initializeResets() {
+    const greetingText = document.getElementById('greetingText');
+    const farewellText = document.getElementById('farewellText');
+    const greetingToggle = document.getElementById('greetingToggle');
+    const farewellToggle = document.getElementById('farewellToggle');
+
+    // Создаем кнопки сброса
+    const greetingReset = document.createElement('button');
+    greetingReset.textContent = "⚪ Сбросить";
+    greetingReset.className = 'reset-btn';
+    greetingToggle.parentElement.appendChild(greetingReset);
+
+    const farewellReset = document.createElement('button');
+    farewellReset.textContent = "⚪ Сбросить";
+    farewellReset.className = 'reset-btn';
+    farewellToggle.parentElement.appendChild(farewellReset);
+
+    // Обработчик
+    greetingReset.addEventListener('click', () => toggleReset(greetingText, greetingReset));
+    farewellReset.addEventListener('click', () => toggleReset(farewellText, farewellReset));
+}
+
+function toggleReset(textarea, button) {
+    const isActive = button.classList.contains('active');
+    if (isActive) {
+        button.classList.remove('active');
+        button.textContent = "⚪ Сбросить";
+        textarea.disabled = false;
+    } else {
+        button.classList.add('active');
+        button.textContent = "✅ Сбросить";
+        textarea.disabled = true;
+        textarea.value = "";
+    }
     validateForm();
 }
 
@@ -67,9 +98,6 @@ function handleToggleClick(toggle, e) {
 function initializeFormValidation() {
     const chatCodeInput = document.getElementById('chatCode');
     chatCodeInput.addEventListener('input', () => setTimeout(validateForm, 100));
-    document.querySelectorAll('.toggle-switch').forEach(toggle => {
-        toggle.addEventListener('click', () => setTimeout(validateForm, 50));
-    });
 }
 
 function validateForm() {
@@ -80,11 +108,14 @@ function validateForm() {
     const farewellToggle = document.getElementById('farewellToggle');
     const farewellText = document.getElementById('farewellText');
 
+    const greetingResetBtn = document.querySelector('#greetingToggle + .reset-btn');
+    const farewellResetBtn = document.querySelector('#farewellToggle + .reset-btn');
+
     const isCodeValid = chatCodeInput.value.trim().length > 0;
     let isTextValid = true;
 
-    if (greetingToggle.classList.contains('active') && greetingText.value.trim() === "") isTextValid = false;
-    if (farewellToggle.classList.contains('active') && farewellText.value.trim() === "") isTextValid = false;
+    if (greetingToggle.classList.contains('active') && !greetingResetBtn.classList.contains('active') && greetingText.value.trim() === "") isTextValid = false;
+    if (farewellToggle.classList.contains('active') && !farewellResetBtn.classList.contains('active') && farewellText.value.trim() === "") isTextValid = false;
 
     applyButton.disabled = !(isCodeValid && isTextValid);
 }
@@ -96,20 +127,22 @@ function applySettings() {
 
     setTimeout(() => {
         const token = document.getElementById('chatCode').value.trim();
-        const hiToggle = document.getElementById('greetingToggle').classList.contains('active');
-        const hiText = document.getElementById('greetingText').value.trim();
-        const byeToggle = document.getElementById('farewellToggle').classList.contains('active');
-        const byeText = document.getElementById('farewellText').value.trim();
         const broadcastToggle = document.getElementById('broadcastToggle').classList.contains('active');
 
+        const greetingResetBtn = document.querySelector('#greetingToggle + .reset-btn');
+        const farewellResetBtn = document.querySelector('#farewellToggle + .reset-btn');
+
+        const hiText = greetingResetBtn.classList.contains('active') ? "DelateParameter" : document.getElementById('greetingText').value.trim() || "-";
+        const byeText = farewellResetBtn.classList.contains('active') ? "DelateParameter" : document.getElementById('farewellText').value.trim() || "-";
+
         const command = `/change;token:${token}` +
-            ` ;hitext:${hiToggle && hiText ? hiText : "-"}` +
-            ` ;goodbyetext:${byeToggle && byeText ? byeText : "-"}` +
+            ` ;hitext:${hiText}` +
+            ` ;goodbyetext:${byeText}` +
             ` ;mailing:${broadcastToggle ? "yes" : "no"}`;
 
         modal.classList.remove('active');
         showCommandModal(command);
-    }, 1000);
+    }, 500);
 }
 
 // ------------------------- Модальное окно с командой -------------------------
