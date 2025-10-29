@@ -672,4 +672,91 @@ header {
     background: rgba(16, 185, 129, 0.8); /* зелёная подсветка при активе */
     border-color: rgba(16, 185, 129, 0.9);
 }
+/* ==========================
+   Кнопки внутри модалки
+   ========================== */
+#copyCommandBtn,
+.modal-body a[href*="t.me/FernieUIBot"] {
+    display: inline-block;
+    padding: 14px 35px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    transform: translateZ(0);
+    will-change: transform, box-shadow;
+}
 
+/* "Скопировать" — с синим градиентом */
+#copyCommandBtn {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
+}
+
+#copyCommandBtn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 25px rgba(0, 114, 255, 0.5);
+}
+
+#copyCommandBtn:active {
+    transform: translateY(1px) scale(0.97);
+    box-shadow: 0 0 10px rgba(0, 114, 255, 0.4);
+}
+
+/* "Перейти в бота" — зелёный градиент */
+.modal-body a[href*="t.me/FernieUIBot"] {
+    text-decoration: none;
+    background: linear-gradient(90deg, #10b981, #059669);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    text-align: center;
+}
+
+.modal-body a[href*="t.me/FernieUIBot"]:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
+}
+
+.modal-body a[href*="t.me/FernieUIBot"]:active {
+    transform: translateY(1px) scale(0.97);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+/* Волновой эффект при клике */
+#copyCommandBtn::after,
+.modal-body a[href*="t.me/FernieUIBot"]::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+#copyCommandBtn:active::after,
+.modal-body a[href*="t.me/FernieUIBot"]:active::after {
+    width: 140%;
+    height: 140%;
+    opacity: 0;
+    animation: ripple-btn 0.45s ease-out;
+}
+
+@keyframes ripple-btn {
+    0% {
+        opacity: 0.4;
+        transform: translate(-50%, -50%) scale(0.3);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.4);
+    }
+}
