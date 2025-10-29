@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
     checkPerformance();
     initializeNavigation();
     initializeToggles();
-    initializeSliders();
     initializeFormValidation();
 
     document.getElementById('applySettings').addEventListener('click', applySettings);
@@ -98,67 +97,6 @@ function createParticles(element, event) {
     }
 }
 
-// ------------------------- Ползунки -------------------------
-function initializeSliders() {
-    document.querySelectorAll('.liquid-slider').forEach(slider => initializeSingleSlider(slider));
-}
-
-function initializeSingleSlider(slider) {
-    const track = slider.querySelector('.slider-track');
-    const fill = slider.querySelector('.slider-fill');
-    const thumb = slider.querySelector('.slider-thumb');
-    const valueDisplay = slider.querySelector('.slider-value');
-    let isDragging = false, currentValue = 4, rafId = null;
-
-    function updateSliderPosition(percent) {
-        const boundedPercent = Math.max(0, Math.min(100, percent));
-        if (rafId) cancelAnimationFrame(rafId);
-
-        rafId = requestAnimationFrame(() => {
-            fill.style.width = `${boundedPercent}%`;
-            thumb.style.left = `${boundedPercent}%`;
-            currentValue = Math.round(1 + (boundedPercent / 100) * 6);
-            valueDisplay.textContent = currentValue;
-            if (!isLowPerformance) createLiquidEffect(track, boundedPercent);
-        });
-    }
-
-    track.addEventListener('click', e => {
-        const rect = track.getBoundingClientRect();
-        const percent = ((e.clientX - rect.left) / rect.width) * 100;
-        updateSliderPosition(percent);
-    }, { passive: true });
-
-    thumb.addEventListener('mousedown', startDrag);
-    document.addEventListener('mouseup', stopDrag);
-    thumb.addEventListener('touchstart', startDrag, { passive: true });
-    document.addEventListener('touchend', stopDrag);
-
-    function startDrag(e) {
-        isDragging = true;
-        document.addEventListener('mousemove', onDrag);
-        document.addEventListener('touchmove', onDrag, { passive: true });
-        e.preventDefault();
-    }
-
-    function stopDrag() {
-        isDragging = false;
-        document.removeEventListener('mousemove', onDrag);
-        document.removeEventListener('touchmove', onDrag);
-        if (rafId) cancelAnimationFrame(rafId);
-    }
-
-    function onDrag(e) {
-        if (!isDragging) return;
-        const rect = track.getBoundingClientRect();
-        let clientX = (e.type === 'touchmove') ? e.touches[0].clientX : e.clientX;
-        const percent = ((clientX - rect.left) / rect.width) * 100;
-        updateSliderPosition(percent);
-    }
-
-    updateSliderPosition(50);
-}
-
 // ------------------------- Валидация формы -------------------------
 function initializeFormValidation() {
     const chatCodeInput = document.getElementById('chatCode');
@@ -191,60 +129,144 @@ function validateForm() {
     applyButton.disabled = !(isCodeValid && isTextValid);
 }
 
-// ------------------------- Новый applySettings с Vercel -------------------------
+// ------------------------- ИСПРАВЛЕННЫЙ applySettings -------------------------
 async function applySettings() {
     const modal = document.getElementById('loadingModal');
     modal.classList.add('active');
 
-    // Получаем введённый код настройки
-    const CCCtoken = document.getElementById('chatCode').value.trim();
-    const hiText = document.getElementById('greetingText').value.trim();
-    const goodbyeText = document.getElementById('farewellText').value.trim();
+    try {
+        // Собираем все настройки
+        const settings = collectAllSettings();
+        
+        // Формируем строку параметров
+        const paramsString = formatSettingsToParams(settings);
+        
+        // Кодируем для URL
+        const encodedParams = encodeURIComponent(paramsString);
+        
+        // Формируем правильную ссылку для Telegram
+        const telegramUrl = `https://t.me/FernieUIBot?start=${encodedParams}`;
+        
+        console.log('Generated URL:', telegramUrl);
+        
+        // Ждем 3 секунды чтобы пользователь увидел анимацию загрузки
+        setTimeout(() => {
+            // Открываем ссылку в новом окне/вкладке
+            window.open(telegramUrl, '_blank');
+            
+            // Закрываем модальное окно
+            modal.classList.remove('active');
+            
+            // Показываем уведомление
+            showNotification('Настройки отправлены в бота! Откройте Telegram для завершения.');
+            
+        }, 3000);
 
-    // Формируем строку аргументов
-    let args = `CCCToken: ${CCCtoken}; `;
-    if (hiText) args += `HiText: ${hiText}; `;
-    if (goodbyeText) args += `GoodByeText: ${goodbyeText};`;
-
-    // Кодируем для URL
-    const encodedArgs = encodeURIComponent(args);
-
-    // Формируем ссылку для Telegram
-    const url = `https://t.me/FernieUIBot?start=CSet$${encodedArgs}`;
-
-    // Перенаправляем пользователя
-    window.location.href = url;
-
-    // Закрываем модальное через 5 секунд (для безопасности)
-    setTimeout(() => modal.classList.remove('active'), 5000);
+    } catch (error) {
+        console.error('Error applying settings:', error);
+        modal.classList.remove('active');
+        showNotification('Ошибка при отправке настроек. Попробуйте еще раз.', 'error');
+    }
 }
 
-// ------------------------- Эффект жидкости -------------------------
-function createLiquidEffect(track, percent) {
-    const wave = document.createElement('div');
-    wave.style.position = 'absolute';
-    wave.style.width = isMobile ? '15px' : '20px';
-    wave.style.height = isMobile ? '15px' : '20px';
-    wave.style.background = 'rgba(255,255,255,0.3)';
-    wave.style.borderRadius = '50%';
-    wave.style.left = `${percent}%`;
-    wave.style.top = '50%';
-    wave.style.transform = 'translate(-50%,-50%) scale(0)';
-    wave.style.transition = 'transform 0.2s ease-out';
+// ------------------------- Сбор всех настроек -------------------------
+function collectAllSettings() {
+    const settings = {
+        // Основные настройки
+        token: document.getElementById('chatCode').value.trim(),
+        
+        // Приветствие
+        greeting: {
+            enabled: document.getElementById('greetingToggle').classList.contains('active'),
+            text: document.getElementById('greetingText').value.trim()
+        },
+        
+        // Прощание
+        farewell: {
+            enabled: document.getElementById('farewellToggle').classList.contains('active'),
+            text: document.getElementById('farewellText').value.trim()
+        },
+        
+        // Рассылка
+        broadcast: document.getElementById('broadcastToggle').classList.contains('active')
+    };
+    
+    return settings;
+}
 
-    track.appendChild(wave);
+// ------------------------- Форматирование настроек в строку параметров -------------------------
+function formatSettingsToParams(settings) {
+    let params = [];
+    
+    // Обязательный параметр - токен
+    params.push(`CCCToken:${settings.token}`);
+    
+    // Приветствие (если включено и есть текст)
+    if (settings.greeting.enabled && settings.greeting.text) {
+        // Заменяем переносы строк на \n
+        const hiText = settings.greeting.text.replace(/\n/g, '\\n');
+        params.push(`HiText:${hiText}`);
+    }
+    
+    // Прощание (если включено и есть текст)
+    if (settings.farewell.enabled && settings.farewell.text) {
+        // Заменяем переносы строк на \n
+        const goodbyeText = settings.farewell.text.replace(/\n/g, '\\n');
+        params.push(`GoodByeText:${goodbyeText}`);
+    }
+    
+    // Рассылка
+    if (settings.broadcast) {
+        params.push(`Broadcast:on`);
+    }
+    
+    // Объединяем все параметры через точку с запятой
+    return params.join(';');
+}
+
+// ------------------------- Вспомогательные функции -------------------------
+function showNotification(message, type = 'success') {
+    // Создаем элемент уведомления
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'error' ? '#ef4444' : '#10b981'};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        z-index: 1001;
+        opacity: 0;
+        transform: translateX(100px);
+        transition: all 0.3s ease;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Анимация появления
     setTimeout(() => {
-        wave.style.transform = 'translate(-50%,-50%) scale(1.5)';
-        wave.style.opacity = '0';
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateX(0)';
     }, 10);
+    
+    // Автоматическое скрытие через 5 секунд
     setTimeout(() => {
-        if (wave.parentNode === track) track.removeChild(wave);
-    }, 200);
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateX(100px)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                document.body.removeChild(notification);
+            }
+        }, 300);
+    }, 5000);
 }
 
 // ------------------------- Предотвращение скролла -------------------------
 document.addEventListener('touchmove', function(e) {
-    if (e.target.classList.contains('slider-thumb') || e.target.classList.contains('toggle-switch')) {
+    if (e.target.classList.contains('toggle-switch')) {
         e.preventDefault();
     }
 }, { passive: false });
