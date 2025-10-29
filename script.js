@@ -103,9 +103,9 @@ function applySettings() {
         const broadcastToggle = document.getElementById('broadcastToggle').classList.contains('active');
 
         const command = `/change;token:${token}` +
-            ` ;hitext:{${hiToggle && hiText ? hiText : "-"}}` +
-            ` ;goodbyetext:{${byeToggle && byeText ? byeText : "-"}}` +
-            ` ;mailing:{${broadcastToggle ? "yes" : "no"}}`;
+            ` ;hitext:${hiToggle && hiText ? hiText : "-"}` +
+            ` ;goodbyetext:${byeToggle && byeText ? byeText : "-"}` +
+            ` ;mailing:${broadcastToggle ? "yes" : "no"}`;
 
         modal.classList.remove('active');
         showCommandModal(command);
