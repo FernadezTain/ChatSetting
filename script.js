@@ -1,27 +1,55 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Инициализация всех элементов управления
+    initializeNavigation();
     initializeToggles();
     initializeSliders();
-    initializeCheckboxes();
     initializeFormValidation();
-    
-    // Обработчик кнопки "Настроить чат"
-    document.getElementById('configureChatBtn').addEventListener('click', function() {
-        alert('Переход на страницу настройки чата...');
-        // Здесь будет переход на другую страницу
-    });
     
     // Обработчик кнопки применения настроек
     document.getElementById('applySettings').addEventListener('click', applySettings);
+    
+    // Обработчик закрытия модального окна
+    document.getElementById('modalClose').addEventListener('click', function() {
+        document.getElementById('loadingModal').classList.remove('active');
+    });
 });
 
-// Инициализация переключателей
+// Навигация между страницами
+function initializeNavigation() {
+    const mainPage = document.getElementById('mainPage');
+    const settingsPage = document.getElementById('settingsPage');
+    const configureBtn = document.getElementById('configureChatBtn');
+    const backBtn = document.getElementById('backBtn');
+    
+    configureBtn.addEventListener('click', function() {
+        mainPage.classList.remove('active');
+        settingsPage.classList.add('active');
+    });
+    
+    backBtn.addEventListener('click', function() {
+        settingsPage.classList.remove('active');
+        mainPage.classList.add('active');
+    });
+}
+
+// Инициализация переключателей с анимацией частиц
 function initializeToggles() {
-    const toggles = document.querySelectorAll('.toggle-btn');
+    const toggles = document.querySelectorAll('.toggle-switch');
     
     toggles.forEach(toggle => {
-        toggle.addEventListener('click', function() {
-            this.classList.toggle('active');
+        toggle.addEventListener('click', function(e) {
+            const wasActive = this.classList.contains('active');
+            
+            if (!wasActive) {
+                // Активируем переключатель
+                this.classList.add('active');
+                
+                // Создаем частицы
+                createParticles(this, e);
+            } else {
+                // Деактивируем переключатель
+                this.classList.remove('active');
+            }
             
             // Находим соответствующий контент
             const toggleId = this.id.replace('Toggle', 'Content');
@@ -31,13 +59,45 @@ function initializeToggles() {
                 content.classList.toggle('active');
             }
             
-            // Добавляем эффект ряби
-            createRippleEffect(this);
-            
             // Проверяем валидность формы
             validateForm();
         });
     });
+}
+
+// Создание частиц для анимации переключателя
+function createParticles(element, event) {
+    const rect = element.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    const particlesContainer = element.querySelector('.toggle-particles');
+    
+    // Создаем 8 частиц
+    for (let i = 0; i < 8; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Вычисляем направление частицы
+        const angle = (i / 8) * Math.PI * 2;
+        const distance = 30;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+        
+        particle.style.setProperty('--tx', `${tx}px`);
+        particle.style.setProperty('--ty', `${ty}px`);
+        particle.style.left = '50%';
+        particle.style.top = '50%';
+        
+        particlesContainer.appendChild(particle);
+        
+        // Удаляем частицу после анимации
+        setTimeout(() => {
+            if (particle.parentNode === particlesContainer) {
+                particlesContainer.removeChild(particle);
+            }
+        }, 600);
+    }
 }
 
 // Инициализация ползунков
@@ -72,7 +132,6 @@ function initializeSliders() {
             const rect = this.getBoundingClientRect();
             const percent = ((e.clientX - rect.left) / rect.width) * 100;
             updateSliderPosition(percent);
-            createRippleEffect(this);
         });
         
         // Обработчики drag для thumb
@@ -122,24 +181,20 @@ function initializeSliders() {
     });
 }
 
-// Инициализация чекбоксов
-function initializeCheckboxes() {
-    const checkboxes = document.querySelectorAll('.liquid-checkbox');
-    
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('click', function() {
-            this.classList.toggle('checked');
-            createRippleEffect(this);
-        });
-    });
-}
-
 // Инициализация валидации формы
 function initializeFormValidation() {
     const chatCodeInput = document.getElementById('chatCode');
     
     chatCodeInput.addEventListener('input', function() {
         validateForm();
+    });
+    
+    // Также проверяем при изменении переключателей
+    const toggles = document.querySelectorAll('.toggle-switch');
+    toggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            setTimeout(validateForm, 100);
+        });
     });
 }
 
@@ -175,8 +230,31 @@ function validateForm() {
 
 // Применение настроек
 function applySettings() {
+    // Показываем модальное окно
+    const modal = document.getElementById('loadingModal');
+    modal.classList.add('active');
+    
     // Собираем данные настроек
+    const settings = collectSettings();
+    
+    // Через 3 секунды перенаправляем на бота
+    setTimeout(() => {
+        const url = generateBotUrl(settings);
+        window.location.href = url;
+    }, 3000);
+    
+    // Автоматическое закрытие через 5 секунд
+    setTimeout(() => {
+        modal.classList.remove('active');
+    }, 5000);
+}
+
+// Сбор всех настроек
+function collectSettings() {
     const settings = {
+        // Токен
+        token: document.getElementById('chatCode').value.trim(),
+        
         // Приветствие
         greeting: {
             enabled: document.getElementById('greetingToggle').classList.contains('active'),
@@ -191,26 +269,30 @@ function applySettings() {
         
         // Настройки доступов
         permissions: {
-            mute: getSliderValue('muteSlider'),
-            unmute: getSliderValue('unmuteSlider'),
-            kick: getSliderValue('kickSlider'),
-            ban: getSliderValue('banSlider'),
-            pin: getSliderValue('pinSlider'),
-            role: getSliderValue('roleSlider')
+            mute: getToggleValue('muteToggle', 'muteSlider'),
+            unmute: getToggleValue('unmuteToggle', 'unmuteSlider'),
+            kick: getToggleValue('kickToggle', 'kickSlider'),
+            ban: getToggleValue('banToggle', 'banSlider'),
+            pin: getToggleValue('pinToggle', 'pinSlider'),
+            role: getToggleValue('roleToggle', 'roleSlider')
         },
         
         // Другие настройки
         other: {
-            broadcast: document.getElementById('broadcastCheckbox').classList.contains('checked'),
-            chatCode: document.getElementById('chatCode').value
+            broadcast: document.getElementById('broadcastToggle').classList.contains('active')
         }
     };
     
-    // Здесь будет отправка данных на сервер
-    console.log('Настройки применены:', settings);
-    
-    // Показываем уведомление
-    showNotification('Настройки успешно применены!');
+    return settings;
+}
+
+// Получение значения переключателя с ползунком
+function getToggleValue(toggleId, sliderId) {
+    const toggle = document.getElementById(toggleId);
+    if (!toggle.classList.contains('active')) {
+        return '-';
+    }
+    return getSliderValue(sliderId);
 }
 
 // Получение значения ползунка
@@ -220,25 +302,44 @@ function getSliderValue(sliderId) {
     return parseInt(valueDisplay.textContent);
 }
 
-// Создание эффекта ряби
-function createRippleEffect(element) {
-    const ripple = document.createElement('div');
-    ripple.classList.add('ripple-effect');
+// Генерация URL для бота
+function generateBotUrl(settings) {
+    let params = [];
     
-    const rect = element.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height);
-    const x = event ? event.clientX - rect.left : rect.width / 2;
-    const y = event ? event.clientY - rect.top : rect.height / 2;
+    // Добавляем токен
+    params.push(`CCCToken: ${settings.token}`);
     
-    ripple.style.width = ripple.style.height = `${size}px`;
-    ripple.style.left = `${x - size / 2}px`;
-    ripple.style.top = `${y - size / 2}px`;
+    // Добавляем приветствие, если включено
+    if (settings.greeting.enabled && settings.greeting.text) {
+        const hiText = settings.greeting.text.replace(/\n/g, '\\n');
+        params.push(`HiText: ${hiText}`);
+    }
     
-    element.appendChild(ripple);
+    // Добавляем прощание, если включено
+    if (settings.farewell.enabled && settings.farewell.text) {
+        const goodbyeText = settings.farewell.text.replace(/\n/g, '\\n');
+        params.push(`GoodByeText: ${goodbyeText}`);
+    }
     
-    setTimeout(() => {
-        ripple.remove();
-    }, 600);
+    // Добавляем настройки доступов
+    params.push(`Mute: ${settings.permissions.mute}`);
+    params.push(`unmute: ${settings.permissions.unmute}`);
+    params.push(`kick: ${settings.permissions.kick}`);
+    params.push(`ban: ${settings.permissions.ban}`);
+    params.push(`pin: ${settings.permissions.pin}`);
+    params.push(`role: ${settings.permissions.role}`);
+    
+    // Добавляем рассылку, если включена
+    if (settings.other.broadcast) {
+        params.push(`broadcast: on`);
+    }
+    
+    // Объединяем параметры
+    const paramsString = params.join('; ');
+    
+    // Формируем URL
+    const baseUrl = 'https://t.me/FernieUIBot?start=CSet$';
+    return baseUrl + encodeURIComponent(paramsString);
 }
 
 // Создание эффекта жидкости для ползунка
@@ -269,42 +370,4 @@ function createLiquidEffect(track, percent) {
             track.removeChild(wave);
         }
     }, 300);
-}
-
-// Показ уведомления
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.textContent = message;
-    notification.style.position = 'fixed';
-    notification.style.top = '20px';
-    notification.style.right = '20px';
-    notification.style.background = 'linear-gradient(90deg, #00c6ff, #0072ff)';
-    notification.style.color = 'white';
-    notification.style.padding = '15px 25px';
-    notification.style.borderRadius = '10px';
-    notification.style.boxShadow = '0 4px 15px rgba(0, 114, 255, 0.3)';
-    notification.style.zIndex = '1000';
-    notification.style.opacity = '0';
-    notification.style.transform = 'translateX(100px)';
-    notification.style.transition = 'all 0.3s ease';
-    
-    document.body.appendChild(notification);
-    
-    // Анимация появления
-    setTimeout(() => {
-        notification.style.opacity = '1';
-        notification.style.transform = 'translateX(0)';
-    }, 10);
-    
-    // Автоматическое скрытие
-    setTimeout(() => {
-        notification.style.opacity = '0';
-        notification.style.transform = 'translateX(100px)';
-        
-        setTimeout(() => {
-            if (notification.parentNode) {
-                document.body.removeChild(notification);
-            }
-        }, 300);
-    }, 3000);
 }
