@@ -146,8 +146,8 @@ function applySettings() {
         const greetingResetBtn = document.querySelector('#greetingToggle + .reset-btn');
         const farewellResetBtn = document.querySelector('#farewellToggle + .reset-btn');
 
-        const hiText = greetingResetBtn.classList.contains('active') ? "DelateParameter" : document.getElementById('greetingText').value.trim() || "-";
-        const byeText = farewellResetBtn.classList.contains('active') ? "DelateParameter" : document.getElementById('farewellText').value.trim() || "-";
+        const hiText = greetingResetBtn.classList.contains('active') ? "DeleteParameter" : document.getElementById('greetingText').value.trim() || "-";
+        const byeText = farewellResetBtn.classList.contains('active') ? "DeleteParameter" : document.getElementById('farewellText').value.trim() || "-";
 
         const command = `/change;token:${token}` +
             ` ;hitext:${hiText}` +
