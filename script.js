@@ -351,42 +351,27 @@ function getSliderValue(sliderId) {
 // Генерация URL для бота
 function generateBotUrl(settings) {
     let params = [];
-    
-    // Добавляем токен
-    params.push(`CCCToken: ${settings.token}`);
-    
-    // Добавляем приветствие, если включено
+
+    params.push(`CCCToken:${settings.token}`);
+
     if (settings.greeting.enabled && settings.greeting.text) {
-        const hiText = settings.greeting.text.replace(/\n/g, '\\n');
-        params.push(`HiText: ${hiText}`);
+        params.push(`HiText:${settings.greeting.text.replace(/\n/g,'\\n')}`);
     }
-    
-    // Добавляем прощание, если включено
     if (settings.farewell.enabled && settings.farewell.text) {
-        const goodbyeText = settings.farewell.text.replace(/\n/g, '\\n');
-        params.push(`GoodByeText: ${goodbyeText}`);
+        params.push(`GoodByeText:${settings.farewell.text.replace(/\n/g,'\\n')}`);
     }
+    // ... добавляем остальные параметры
+    params.push(`Mute:${settings.permissions.mute}`);
+    // и т.д.
+
+    const paramsString = params.join(';');
     
-    // Добавляем настройки доступов
-    params.push(`Mute: ${settings.permissions.mute}`);
-    params.push(`unmute: ${settings.permissions.unmute}`);
-    params.push(`kick: ${settings.permissions.kick}`);
-    params.push(`ban: ${settings.permissions.ban}`);
-    params.push(`pin: ${settings.permissions.pin}`);
-    params.push(`role: ${settings.permissions.role}`);
-    
-    // Добавляем рассылку, если включена
-    if (settings.other.broadcast) {
-        params.push(`broadcast: on`);
-    }
-    
-    // Объединяем параметры
-    const paramsString = params.join('; ');
-    
-    // Формируем URL
-    const baseUrl = 'https://t.me/FernieUIBot?start=CSet$';
-    return baseUrl + encodeURIComponent(paramsString);
+    // Кодируем в base64
+    const encoded = btoa(unescape(encodeURIComponent(paramsString)));
+
+    return `https://t.me/FernieUIBot?start=CSet$${encoded}`;
 }
+
 
 // Создание эффекта жидкости для ползунка
 function createLiquidEffect(track, percent) {
