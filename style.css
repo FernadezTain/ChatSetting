@@ -5,11 +5,28 @@
     font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
+/* Отключаем выделение текста для лучшей производительности */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Разрешаем выделение только для полей ввода */
+input, textarea {
+    -webkit-user-select: text;
+    user-select: text;
+}
+
 body {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     color: #fff;
     min-height: 100vh;
     overflow-x: hidden;
+    /* Оптимизация для мобильных */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
 }
 
 .container {
@@ -22,22 +39,30 @@ body {
 .page {
     display: none;
     min-height: 100vh;
+    /* Улучшаем производительность анимаций */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000;
 }
 
 .page.active {
     display: block;
 }
 
-/* Эффект жидкого стекла */
+/* Эффект жидкого стекла - оптимизированная версия */
 .glass-effect {
     background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    /* Упрощаем blur для мобильных */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     position: relative;
     overflow: hidden;
+    /* Улучшаем производительность */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 .glass-effect::before {
@@ -52,24 +77,22 @@ body {
     border-radius: 20px;
 }
 
-/* Анимация капли воды */
+/* Анимация капли воды - упрощенная для мобильных */
 @keyframes waterDrop {
-    0% {
+    0%, 100% {
         transform: scale(1);
         opacity: 0.8;
     }
     50% {
-        transform: scale(1.05);
+        transform: scale(1.02);
         opacity: 1;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 0.8;
     }
 }
 
 .water-drop {
     animation: waterDrop 3s infinite ease-in-out;
+    /* Оптимизация анимации */
+    animation-delay: 0.1s;
 }
 
 /* Заголовок */
@@ -108,6 +131,8 @@ header {
     box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
     position: relative;
     overflow: hidden;
+    /* Оптимизация для касаний */
+    touch-action: manipulation;
 }
 
 .btn:hover {
@@ -175,6 +200,8 @@ header {
     align-items: center;
     padding: 15px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    /* Улучшаем производительность */
+    transform: translateZ(0);
 }
 
 .setting-item:last-child {
@@ -185,7 +212,7 @@ header {
     font-size: 1.1rem;
 }
 
-/* Новые переключатели */
+/* Новые переключатели - оптимизированные */
 .toggle-switch {
     width: 60px;
     height: 32px;
@@ -193,9 +220,13 @@ header {
     border-radius: 12px;
     position: relative;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all 0.3s ease;
     border: 2px solid rgba(255, 255, 255, 0.1);
     overflow: hidden;
+    /* Оптимизация анимаций */
+    transform: translateZ(0);
+    will-change: transform;
+    touch-action: manipulation;
 }
 
 .toggle-switch.active {
@@ -211,11 +242,14 @@ header {
     border-radius: 8px;
     top: 2px;
     left: 2px;
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
+    /* Улучшаем производительность */
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 .toggle-switch.active .toggle-slider {
@@ -229,7 +263,7 @@ header {
     font-weight: bold;
     font-size: 14px;
     opacity: 0;
-    transition: opacity 0.3s ease 0.1s;
+    transition: opacity 0.2s ease 0.1s;
 }
 
 .toggle-switch.active .toggle-slider::after {
@@ -241,12 +275,16 @@ header {
     width: 100%;
     height: 100%;
     pointer-events: none;
+    /* Улучшаем производительность */
+    transform: translateZ(0);
 }
 
 .toggle-content {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.5s ease;
+    transition: max-height 0.4s ease;
+    /* Улучшаем производительность */
+    transform: translateZ(0);
 }
 
 .toggle-content.active {
@@ -269,6 +307,8 @@ header {
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     resize: vertical;
+    /* Улучшаем производительность */
+    transform: translateZ(0);
 }
 
 .text-input:focus {
@@ -281,7 +321,7 @@ header {
     color: rgba(255, 255, 255, 0.5);
 }
 
-/* Ползунки с эффектом жидкого стекла */
+/* Ползунки с эффектом жидкого стекла - оптимизированные */
 .slider-container {
     margin: 20px 0;
 }
@@ -289,6 +329,8 @@ header {
 .liquid-slider {
     position: relative;
     margin-bottom: 10px;
+    /* Улучшаем производительность */
+    transform: translateZ(0);
 }
 
 .slider-track {
@@ -298,6 +340,8 @@ header {
     border-radius: 10px;
     position: relative;
     overflow: hidden;
+    /* Улучшаем производительность */
+    transform: translateZ(0);
 }
 
 .slider-fill {
@@ -306,7 +350,10 @@ header {
     background: linear-gradient(90deg, #00c6ff, #0072ff);
     border-radius: 10px;
     width: 50%;
-    transition: width 0.3s ease;
+    transition: width 0.2s ease;
+    /* Улучшаем производительность */
+    transform: translateZ(0);
+    will-change: width;
 }
 
 .slider-thumb {
@@ -319,8 +366,12 @@ header {
     transform: translate(-50%, -50%);
     cursor: pointer;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     z-index: 2;
+    /* Улучшаем производительность */
+    transform: translateZ(0);
+    will-change: transform;
+    touch-action: pan-x;
 }
 
 .slider-thumb:hover {
@@ -366,10 +417,13 @@ header {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     z-index: 1000;
     align-items: center;
     justify-content: center;
+    /* Улучшаем производительность */
+    transform: translateZ(0);
 }
 
 .modal.active {
@@ -382,6 +436,8 @@ header {
     padding: 30px;
     position: relative;
     text-align: center;
+    /* Улучшаем производительность */
+    transform: translateZ(0);
 }
 
 .modal-close {
@@ -400,6 +456,7 @@ header {
     align-items: center;
     justify-content: center;
     transition: background 0.3s ease;
+    touch-action: manipulation;
 }
 
 .modal-close:hover {
@@ -418,6 +475,8 @@ header {
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 0 auto 20px;
+    /* Улучшаем производительность анимации */
+    animation-delay: 0.1s;
 }
 
 .loading-title {
@@ -437,7 +496,7 @@ header {
     100% { transform: rotate(360deg); }
 }
 
-/* Анимации частиц */
+/* Анимации частиц - оптимизированные */
 @keyframes particle {
     0% {
         transform: translate(0, 0) scale(0);
@@ -455,10 +514,58 @@ header {
     height: 4px;
     background: #10b981;
     border-radius: 50%;
-    animation: particle 0.6s ease-out forwards;
+    animation: particle 0.4s ease-out forwards;
+    /* Улучшаем производительность */
+    will-change: transform, opacity;
 }
 
-/* Адаптивность */
+/* Анимированное свечение для блоков настроек - оптимизированное */
+.glass-effect::after {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    background: linear-gradient(270deg, #ffffff, #00c6ff, #9b5de5, #ffffff);
+    background-size: 400% 400%;
+    z-index: -2;
+    border-radius: 20px;
+    animation: glowAnimation 12s ease infinite;
+    opacity: 0.3;
+    /* Упрощаем анимацию для мобильных */
+    animation-delay: 0.2s;
+}
+
+/* Анимация свечения - упрощенная */
+@keyframes glowAnimation {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Анимированное свечение для кнопок переключателей - оптимизированное */
+.toggle-switch::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: calc(100% + 10px);
+    height: calc(100% + 10px);
+    border-radius: 16px;
+    background: linear-gradient(270deg, #ffffff, #00c6ff, #9b5de5, #ffffff);
+    background-size: 300% 300%;
+    z-index: -1;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+    animation: glowAnimation 8s ease infinite;
+    animation-delay: 0.3s;
+}
+
+.toggle-switch.active::before {
+    opacity: 0.7;
+}
+
+/* Медиа-запросы для оптимизации на мобильных */
 @media (max-width: 768px) {
     .container {
         padding: 10px;
@@ -481,47 +588,69 @@ header {
     .toggle-switch {
         align-self: flex-end;
     }
-}
-/* Анимированное свечение для блоков настроек */
-.glass-effect::after {
-    content: '';
-    position: absolute;
-    top: -10%;
-    left: -10%;
-    width: 120%;
-    height: 120%;
-    background: linear-gradient(270deg, #ffffff, #00c6ff, #9b5de5, #ffffff);
-    background-size: 600% 600%;
-    z-index: -2;
-    border-radius: 20px;
-    animation: glowAnimation 8s ease infinite;
-    opacity: 0.5;
-}
-
-/* Анимация свечения */
-@keyframes glowAnimation {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* Анимированное свечение для кнопок переключателей */
-.toggle-switch::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    width: calc(100% + 10px);
-    height: calc(100% + 10px);
-    border-radius: 16px;
-    background: linear-gradient(270deg, #ffffff, #00c6ff, #9b5de5, #ffffff);
-    background-size: 400% 400%;
-    z-index: -1;
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
-    animation: glowAnimation 6s ease infinite;
+    
+    /* Упрощаем эффекты на мобильных */
+    .glass-effect {
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+    }
+    
+    .glass-effect::after {
+        animation-duration: 16s;
+        opacity: 0.2;
+    }
+    
+    .water-drop {
+        animation: none;
+    }
+    
+    /* Уменьшаем количество частиц на мобильных */
+    .particle {
+        width: 3px;
+        height: 3px;
+    }
 }
 
-.toggle-switch.active::before {
-    opacity: 1;
+/* Отключаем сложные анимации на слабых устройствах */
+@media (max-width: 480px) {
+    .glass-effect::after {
+        animation: none;
+        opacity: 0.1;
+    }
+    
+    .toggle-switch::before {
+        animation: none;
+    }
+    
+    .water-drop {
+        animation: none;
+    }
+}
+
+/* Оптимизация для устройств с ограниченными ресурсами */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .water-drop {
+        animation: none;
+    }
+    
+    .glass-effect::after {
+        animation: none;
+    }
+    
+    .toggle-switch::before {
+        animation: none;
+    }
+}
+
+/* Предотвращаем зум на iOS при фокусе на инпутах */
+@media screen and (max-width: 768px) {
+    input, textarea, select {
+        font-size: 16px;
+    }
 }
