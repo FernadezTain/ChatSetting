@@ -102,10 +102,10 @@ function applySettings() {
         const byeText = document.getElementById('farewellText').value.trim();
         const broadcastToggle = document.getElementById('broadcastToggle').classList.contains('active');
 
-        const command = `/change/token:${token}` +
-            ` /hitext:{${hiToggle && hiText ? hiText : "-"}}` +
-            ` /goodbyetext:{${byeToggle && byeText ? byeText : "-"}}` +
-            ` /mailing:{${broadcastToggle ? "да" : "-"}}`;
+        const command = `/change;token:${token}` +
+            ` ;hitext:{${hiToggle && hiText ? hiText : "-"}}` +
+            ` ;goodbyetext:{${byeToggle && byeText ? byeText : "-"}}` +
+            ` ;mailing:{${broadcastToggle ? "да" : "-"}}`;
 
         modal.classList.remove('active');
         showCommandModal(command);
