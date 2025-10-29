@@ -135,24 +135,30 @@ async function applySettings() {
     modal.classList.add('active');
 
     try {
+        // Собираем все настройки
         const settings = collectAllSettings();
+        
+        // Формируем строку параметров
         const paramsString = formatSettingsToParams(settings);
-        const encodedParams = encodeURIComponent(paramsString);
-
-        console.log('Generated URL params:', encodedParams);
-
+        
+        console.log('Settings string:', paramsString);
+        
+        // Ждем 3 секунды чтобы пользователь увидел анимацию загрузки
         setTimeout(() => {
-            openTelegramBot(encodedParams);
+            // Закрываем модальное окно
             modal.classList.remove('active');
-            showNotification('Настройки отправлены в бота! Откройте Telegram для завершения.');
-        }, 500); // чуть быстрее, чем 3 сек
+            
+            // Показываем инструкцию пользователю
+            showTelegramInstruction(paramsString);
+            
+        }, 3000);
+
     } catch (error) {
         console.error('Error applying settings:', error);
         modal.classList.remove('active');
         showNotification('Ошибка при отправке настроек. Попробуйте еще раз.', 'error');
     }
 }
-
 
 // ------------------------- Сбор всех настроек -------------------------
 function collectAllSettings() {
@@ -207,6 +213,56 @@ function formatSettingsToParams(settings) {
     
     // Объединяем все параметры через точку с запятой
     return params.join(';');
+}
+
+// ------------------------- Показ инструкции для Telegram -------------------------
+function showTelegramInstruction(paramsString) {
+    const instructionModal = document.createElement('div');
+    instructionModal.innerHTML = `
+        <div class="modal active" style="display: flex;">
+            <div class="modal-content glass-effect" style="max-width: 500px;">
+                <button class="modal-close" onclick="this.parentElement.parentElement.remove()">×</button>
+                <div class="modal-body">
+                    <h3 style="margin-bottom: 15px; color: #00c6ff;">📋 Инструкция для настройки</h3>
+                    <p style="margin-bottom: 20px; line-height: 1.5;">
+                        Чтобы применить настройки, выполните следующие действия:
+                    </p>
+                    <ol style="text-align: left; margin-bottom: 25px; padding-left: 20px; line-height: 1.6;">
+                        <li style="margin-bottom: 10px;">Откройте Telegram</li>
+                        <li style="margin-bottom: 10px;">Найдите бота <strong>@FernieUIBot</strong></li>
+                        <li style="margin-bottom: 10px;">Отправьте ему команду:</li>
+                    </ol>
+                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1);">
+                        <code style="font-family: monospace; font-size: 14px; word-break: break-all;">
+                            /start CSet$${paramsString}
+                        </code>
+                    </div>
+                    <button onclick="copyToClipboard('/start CSet$${paramsString}')" 
+                            style="background: linear-gradient(90deg, #00c6ff, #0072ff); 
+                                   border: none; color: white; padding: 12px 25px; 
+                                   border-radius: 25px; cursor: pointer; font-size: 14px;
+                                   margin-bottom: 15px;">
+                        📋 Скопировать команду
+                    </button>
+                    <p style="font-size: 12px; opacity: 0.7; margin-top: 10px;">
+                        Скопируйте команду выше и отправьте её боту в Telegram
+                    </p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(instructionModal);
+}
+
+// ------------------------- Копирование в буфер обмена -------------------------
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('Команда скопирована в буфер обмена!', 'success');
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+        showNotification('Ошибка копирования', 'error');
+    });
 }
 
 // ------------------------- Вспомогательные функции -------------------------
