@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+    display: flex;
+    justify-content: center;
+    padding: 50px;
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 25px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+h1 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px 0;
+    color: #fff;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+    backdrop-filter: blur(5px);
+}
+
+.button:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.section {
+    margin: 20px 0;
+    color: #fff;
+}
+
+.toggle-content {
+    margin-top: 10px;
+    display: none;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    backdrop-filter: blur(5px);
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 20px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    margin-top: 10px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0.7);
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: 0.3s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: rgba(255,255,255,0.7);
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    width: 25px;
+    height: 25px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.5);
+    appearance: none;
+    position: relative;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked {
+    background: rgba(255,255,255,0.5);
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked::after {
+    content: '✔';
+    position: absolute;
+    top: 1px;
+    left: 5px;
+    color: #000;
+    font-weight: bold;
+}
+
+.apply-button {
+    margin-top: 20px;
+    width: 100%;
+}
