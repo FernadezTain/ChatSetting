@@ -46,11 +46,16 @@ function initializeNavigation() {
 function initializeToggles() {
     document.querySelectorAll('.toggle-switch').forEach(toggle => {
         toggle.addEventListener('click', function(e) {
+            // Проверяем, заблокирован ли переключатель
+            if (toggle.classList.contains('disabled')) return;
+
             const wasActive = toggle.classList.contains('active');
             toggle.classList.toggle('active');
+
             const toggleId = toggle.id.replace('Toggle', 'Content');
             const content = document.getElementById(toggleId);
             if (content) content.classList.toggle('active');
+
             validateForm();
         });
     });
