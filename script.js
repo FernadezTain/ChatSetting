@@ -65,12 +65,12 @@ function initializeResets() {
 
     // Создаем кнопки сброса
     const greetingReset = document.createElement('button');
-    greetingReset.textContent = "⚪ Сбросить";
+    greetingReset.textContent = "Сбросить";
     greetingReset.className = 'reset-btn';
     greetingToggle.parentElement.appendChild(greetingReset);
 
     const farewellReset = document.createElement('button');
-    farewellReset.textContent = "⚪ Сбросить";
+    farewellReset.textContent = "Сбросить";
     farewellReset.className = 'reset-btn';
     farewellToggle.parentElement.appendChild(farewellReset);
 
@@ -83,11 +83,9 @@ function toggleReset(textarea, button) {
     const isActive = button.classList.contains('active');
     if (isActive) {
         button.classList.remove('active');
-        button.textContent = "⚪ Сбросить";
         textarea.disabled = false;
     } else {
         button.classList.add('active');
-        button.textContent = "✅ Сбросить";
         textarea.disabled = true;
         textarea.value = "";
     }
