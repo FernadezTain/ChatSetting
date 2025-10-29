@@ -201,22 +201,3 @@ function showNotification(message, type='success') {
         setTimeout(()=>notification.remove(),300);
     },5000);
 }
-const greetingReset = document.createElement('button');
-greetingReset.textContent = "Сбросить";
-greetingReset.className = 'reset-btn';
-greetingToggle.parentElement.appendChild(greetingReset);
-
-greetingReset.addEventListener('click', () => toggleReset(greetingText, greetingReset));
-
-function toggleReset(textarea, button) {
-    const isActive = button.classList.contains('active');
-    if (isActive) {
-        button.classList.remove('active');
-        textarea.disabled = false;
-    } else {
-        button.classList.add('active');
-        textarea.disabled = true;
-        textarea.value = "";
-    }
-    validateForm();
-}
