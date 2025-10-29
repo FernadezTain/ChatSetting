@@ -7,199 +7,244 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header class="glass-effect water-drop">
-            <div class="logo">FernieX</div>
-            <div class="subtitle">Настройка бота в чате</div>
-            <button class="btn" id="configureChatBtn">Настроить чат</button>
-        </header>
+    <!-- Главная страница -->
+    <div id="mainPage" class="page active">
+        <div class="container">
+            <header class="glass-effect water-drop">
+                <div class="logo">FernieX</div>
+                <div class="subtitle">Настройка бота в чате</div>
+                <button class="btn" id="configureChatBtn">Настроить чат</button>
+            </header>
+        </div>
+    </div>
 
-        <main id="mainContent">
-            <div class="settings-container">
-                <!-- Приветствие пользователей -->
-                <div class="section glass-effect">
-                    <div class="section-title">Приветствие пользователей</div>
-                    <div class="setting-item">
-                        <span class="setting-label">Включить приветствие</span>
-                        <div class="toggle-btn" id="greetingToggle"></div>
+    <!-- Страница настроек -->
+    <div id="settingsPage" class="page">
+        <div class="container">
+            <header class="glass-effect">
+                <div class="logo">FernieX</div>
+                <div class="subtitle">Настройка бота в чате</div>
+                <button class="btn back-btn" id="backBtn">← Назад</button>
+            </header>
+
+            <main>
+                <div class="settings-container">
+                    <!-- Приветствие пользователей -->
+                    <div class="section glass-effect">
+                        <div class="section-title">Приветствие пользователей</div>
+                        <div class="setting-item">
+                            <span class="setting-label">Включить приветствие</span>
+                            <div class="toggle-switch" id="greetingToggle">
+                                <div class="toggle-slider"></div>
+                                <div class="toggle-particles"></div>
+                            </div>
+                        </div>
+                        <div class="toggle-content" id="greetingContent">
+                            <div class="input-group">
+                                <textarea class="text-input" id="greetingText" placeholder="Введите текст приветствия..." rows="3"></textarea>
+                            </div>
+                        </div>
                     </div>
-                    <div class="toggle-content" id="greetingContent">
+
+                    <!-- Прощание с пользователями -->
+                    <div class="section glass-effect">
+                        <div class="section-title">Прощание с пользователями</div>
+                        <div class="setting-item">
+                            <span class="setting-label">Включить прощание</span>
+                            <div class="toggle-switch" id="farewellToggle">
+                                <div class="toggle-slider"></div>
+                                <div class="toggle-particles"></div>
+                            </div>
+                        </div>
+                        <div class="toggle-content" id="farewellContent">
+                            <div class="input-group">
+                                <textarea class="text-input" id="farewellText" placeholder="Введите текст прощания..." rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Настройка доступов -->
+                    <div class="section glass-effect">
+                        <div class="section-title">Настройка доступов</div>
+                        
+                        <div class="setting-item">
+                            <span class="setting-label">Выдача мута</span>
+                            <div class="toggle-switch" id="muteToggle">
+                                <div class="toggle-slider"></div>
+                                <div class="toggle-particles"></div>
+                            </div>
+                        </div>
+                        <div class="toggle-content" id="muteContent">
+                            <div class="slider-container">
+                                <div class="liquid-slider" id="muteSlider">
+                                    <div class="slider-track">
+                                        <div class="slider-fill"></div>
+                                        <div class="slider-thumb"></div>
+                                    </div>
+                                    <div class="slider-value">4</div>
+                                </div>
+                                <div class="slider-labels">
+                                    <span>1</span>
+                                    <span>7</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <span class="setting-label">Снятие мута</span>
+                            <div class="toggle-switch" id="unmuteToggle">
+                                <div class="toggle-slider"></div>
+                                <div class="toggle-particles"></div>
+                            </div>
+                        </div>
+                        <div class="toggle-content" id="unmuteContent">
+                            <div class="slider-container">
+                                <div class="liquid-slider" id="unmuteSlider">
+                                    <div class="slider-track">
+                                        <div class="slider-fill"></div>
+                                        <div class="slider-thumb"></div>
+                                    </div>
+                                    <div class="slider-value">4</div>
+                                </div>
+                                <div class="slider-labels">
+                                    <span>1</span>
+                                    <span>7</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <span class="setting-label">Кик пользователя</span>
+                            <div class="toggle-switch" id="kickToggle">
+                                <div class="toggle-slider"></div>
+                                <div class="toggle-particles"></div>
+                            </div>
+                        </div>
+                        <div class="toggle-content" id="kickContent">
+                            <div class="slider-container">
+                                <div class="liquid-slider" id="kickSlider">
+                                    <div class="slider-track">
+                                        <div class="slider-fill"></div>
+                                        <div class="slider-thumb"></div>
+                                    </div>
+                                    <div class="slider-value">4</div>
+                                </div>
+                                <div class="slider-labels">
+                                    <span>1</span>
+                                    <span>7</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <span class="setting-label">Блокировка пользователей</span>
+                            <div class="toggle-switch" id="banToggle">
+                                <div class="toggle-slider"></div>
+                                <div class="toggle-particles"></div>
+                            </div>
+                        </div>
+                        <div class="toggle-content" id="banContent">
+                            <div class="slider-container">
+                                <div class="liquid-slider" id="banSlider">
+                                    <div class="slider-track">
+                                        <div class="slider-fill"></div>
+                                        <div class="slider-thumb"></div>
+                                    </div>
+                                    <div class="slider-value">4</div>
+                                </div>
+                                <div class="slider-labels">
+                                    <span>1</span>
+                                    <span>7</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <span class="setting-label">Закрепление сообщений</span>
+                            <div class="toggle-switch" id="pinToggle">
+                                <div class="toggle-slider"></div>
+                                <div class="toggle-particles"></div>
+                            </div>
+                        </div>
+                        <div class="toggle-content" id="pinContent">
+                            <div class="slider-container">
+                                <div class="liquid-slider" id="pinSlider">
+                                    <div class="slider-track">
+                                        <div class="slider-fill"></div>
+                                        <div class="slider-thumb"></div>
+                                    </div>
+                                    <div class="slider-value">4</div>
+                                </div>
+                                <div class="slider-labels">
+                                    <span>1</span>
+                                    <span>7</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <span class="setting-label">Смена ролей</span>
+                            <div class="toggle-switch" id="roleToggle">
+                                <div class="toggle-slider"></div>
+                                <div class="toggle-particles"></div>
+                            </div>
+                        </div>
+                        <div class="toggle-content" id="roleContent">
+                            <div class="slider-container">
+                                <div class="liquid-slider" id="roleSlider">
+                                    <div class="slider-track">
+                                        <div class="slider-fill"></div>
+                                        <div class="slider-thumb"></div>
+                                    </div>
+                                    <div class="slider-value">4</div>
+                                </div>
+                                <div class="slider-labels">
+                                    <span>1</span>
+                                    <span>7</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Другие настройки -->
+                    <div class="section glass-effect">
+                        <div class="section-title">Другие настройки</div>
+                        
+                        <div class="setting-item">
+                            <span class="setting-label">Рассылка</span>
+                            <div class="toggle-switch" id="broadcastToggle">
+                                <div class="toggle-slider"></div>
+                                <div class="toggle-particles"></div>
+                            </div>
+                        </div>
+
+                        <div class="setting-item">
+                            <span class="setting-label">Введите код настройки чата</span>
+                        </div>
                         <div class="input-group">
-                            <input type="text" class="text-input" id="greetingText" placeholder="Введите текст приветствия...">
+                            <input type="text" class="text-input" id="chatCode" placeholder="Код настройки (до 15 символов)" maxlength="15">
                         </div>
+                    </div>
+
+                    <!-- Кнопка применения настроек -->
+                    <div class="section glass-effect">
+                        <button class="btn apply-btn" id="applySettings" disabled>Применить настройки</button>
                     </div>
                 </div>
+            </main>
+        </div>
+    </div>
 
-                <!-- Прощание с пользователями -->
-                <div class="section glass-effect">
-                    <div class="section-title">Прощание с пользователями</div>
-                    <div class="setting-item">
-                        <span class="setting-label">Включить прощание</span>
-                        <div class="toggle-btn" id="farewellToggle"></div>
-                    </div>
-                    <div class="toggle-content" id="farewellContent">
-                        <div class="input-group">
-                            <input type="text" class="text-input" id="farewellText" placeholder="Введите текст прощания...">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Настройка доступов -->
-                <div class="section glass-effect">
-                    <div class="section-title">Настройка доступов</div>
-                    
-                    <div class="setting-item">
-                        <span class="setting-label">Выдача мута</span>
-                        <div class="toggle-btn" id="muteToggle"></div>
-                    </div>
-                    <div class="toggle-content" id="muteContent">
-                        <div class="slider-container">
-                            <div class="liquid-slider" id="muteSlider">
-                                <div class="slider-track">
-                                    <div class="slider-fill"></div>
-                                    <div class="slider-thumb"></div>
-                                </div>
-                                <div class="slider-value">4</div>
-                            </div>
-                            <div class="slider-labels">
-                                <span>1</span>
-                                <span>7</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="setting-item">
-                        <span class="setting-label">Снятие мута</span>
-                        <div class="toggle-btn" id="unmuteToggle"></div>
-                    </div>
-                    <div class="toggle-content" id="unmuteContent">
-                        <div class="slider-container">
-                            <div class="liquid-slider" id="unmuteSlider">
-                                <div class="slider-track">
-                                    <div class="slider-fill"></div>
-                                    <div class="slider-thumb"></div>
-                                </div>
-                                <div class="slider-value">4</div>
-                            </div>
-                            <div class="slider-labels">
-                                <span>1</span>
-                                <span>7</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="setting-item">
-                        <span class="setting-label">Кик пользователя</span>
-                        <div class="toggle-btn" id="kickToggle"></div>
-                    </div>
-                    <div class="toggle-content" id="kickContent">
-                        <div class="slider-container">
-                            <div class="liquid-slider" id="kickSlider">
-                                <div class="slider-track">
-                                    <div class="slider-fill"></div>
-                                    <div class="slider-thumb"></div>
-                                </div>
-                                <div class="slider-value">4</div>
-                            </div>
-                            <div class="slider-labels">
-                                <span>1</span>
-                                <span>7</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="setting-item">
-                        <span class="setting-label">Блокировка пользователей</span>
-                        <div class="toggle-btn" id="banToggle"></div>
-                    </div>
-                    <div class="toggle-content" id="banContent">
-                        <div class="slider-container">
-                            <div class="liquid-slider" id="banSlider">
-                                <div class="slider-track">
-                                    <div class="slider-fill"></div>
-                                    <div class="slider-thumb"></div>
-                                </div>
-                                <div class="slider-value">4</div>
-                            </div>
-                            <div class="slider-labels">
-                                <span>1</span>
-                                <span>7</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="setting-item">
-                        <span class="setting-label">Закрепление сообщений</span>
-                        <div class="toggle-btn" id="pinToggle"></div>
-                    </div>
-                    <div class="toggle-content" id="pinContent">
-                        <div class="slider-container">
-                            <div class="liquid-slider" id="pinSlider">
-                                <div class="slider-track">
-                                    <div class="slider-fill"></div>
-                                    <div class="slider-thumb"></div>
-                                </div>
-                                <div class="slider-value">4</div>
-                            </div>
-                            <div class="slider-labels">
-                                <span>1</span>
-                                <span>7</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="setting-item">
-                        <span class="setting-label">Смена ролей</span>
-                        <div class="toggle-btn" id="roleToggle"></div>
-                    </div>
-                    <div class="toggle-content" id="roleContent">
-                        <div class="slider-container">
-                            <div class="liquid-slider" id="roleSlider">
-                                <div class="slider-track">
-                                    <div class="slider-fill"></div>
-                                    <div class="slider-thumb"></div>
-                                </div>
-                                <div class="slider-value">4</div>
-                            </div>
-                            <div class="slider-labels">
-                                <span>1</span>
-                                <span>7</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Другие настройки -->
-                <div class="section glass-effect">
-                    <div class="section-title">Другие настройки</div>
-                    
-                    <div class="setting-item">
-                        <span class="setting-label">Рассылка</span>
-                        <div class="toggle-btn" id="broadcastToggle"></div>
-                    </div>
-                    <div class="toggle-content" id="broadcastContent">
-                        <div class="checkbox-container">
-                            <div class="liquid-checkbox" id="broadcastCheckbox">
-                                <div class="checkbox-inner"></div>
-                            </div>
-                            <span class="checkbox-label">Включить рассылку</span>
-                        </div>
-                    </div>
-
-                    <div class="setting-item">
-                        <span class="setting-label">Введите код настройки чата</span>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" class="text-input" id="chatCode" placeholder="Код настройки (до 15 символов)" maxlength="15">
-                    </div>
-                </div>
-
-                <!-- Кнопка применения настроек -->
-                <div class="section glass-effect">
-                    <button class="btn apply-btn" id="applySettings" disabled>Применить настройки</button>
-                </div>
+    <!-- Модальное окно загрузки -->
+    <div id="loadingModal" class="modal">
+        <div class="modal-content glass-effect">
+            <button class="modal-close" id="modalClose">×</button>
+            <div class="modal-body">
+                <div class="loading-spinner"></div>
+                <h3 class="loading-title">Сборка настройки...</h3>
+                <p class="loading-subtitle">Подготавливаем параметры к переносу в бота...</p>
             </div>
-        </main>
+        </div>
     </div>
 
     <script src="script.js"></script>
