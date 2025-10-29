@@ -165,7 +165,7 @@ function showCommandModal(command) {
     modalHtml.innerHTML = `
         <div class="modal active" style="display:flex;">
             <div class="modal-content glass-effect" style="max-width:500px;">
-                <button class="modal-close" onclick="this.parentElement.parentElement.remove()">×</button>
+                <button class="modal-close">×</button>
                 <div class="modal-body">
                     <h3 style="margin-bottom: 15px; color: #00c6ff;">Команда настройки готова!</h3>
                     <p>Инструкция по установке:</p>
@@ -174,13 +174,24 @@ function showCommandModal(command) {
                         <li>Перейдите в бота <strong>@FernieUIBot</strong></li>
                         <li>Вставьте команду в личку бота</li>
                     </ol>
-                    <textarea readonly style="width:100%; font-family:monospace; padding:10px; border-radius:10px; margin-bottom:10px;">${command}</textarea>
-                    <button onclick="copyToClipboard('${command}')" style="padding:10px 20px; border:none; border-radius:20px; background:linear-gradient(90deg,#00c6ff,#0072ff); color:white; cursor:pointer;">📋 Скопировать команду</button>
+                    <textarea readonly style="width:100%; font-family:monospace; padding:10px; border-radius:10px; margin-bottom:10px;" id="commandText">${command}</textarea>
+                    <button id="copyCommandBtn" style="padding:10px 20px; border:none; border-radius:20px; background:linear-gradient(90deg,#00c6ff,#0072ff); color:white; cursor:pointer;">📋 Скопировать команду</button>
                 </div>
             </div>
         </div>
     `;
     document.body.appendChild(modalHtml);
+
+    // Закрытие модалки
+    modalHtml.querySelector('.modal-close').addEventListener('click', () => {
+        modalHtml.remove();
+    });
+
+    // Кнопка копирования
+    modalHtml.querySelector('#copyCommandBtn').addEventListener('click', () => {
+        const text = modalHtml.querySelector('#commandText').value;
+        copyToClipboard(text);
+    });
 }
 
 // ------------------------- Копирование в буфер обмена -------------------------
