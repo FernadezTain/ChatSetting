@@ -3,10 +3,11 @@
 body {
     margin: 0;
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
     display: flex;
     justify-content: center;
     padding: 50px;
+    color: #fff;
 }
 
 .container {
@@ -15,67 +16,71 @@ body {
     background: rgba(255,255,255,0.05);
     border-radius: 25px;
     padding: 30px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     border: 1px solid rgba(255,255,255,0.2);
+    animation: fadeIn 1s ease forwards;
 }
 
 h1 {
     text-align: center;
-    color: #fff;
     margin-bottom: 20px;
 }
 
-.button {
+/* Переливающаяся кнопка */
+.shimmer-button {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 12px 25px;
     margin: 10px 0;
     color: #fff;
-    background: rgba(255,255,255,0.2);
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: 0.3s;
-    backdrop-filter: blur(5px);
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 25px;
+    background: linear-gradient(270deg, #6a11cb, #2575fc, #6a11cb);
+    background-size: 600% 600%;
+    animation: shimmer 4s ease infinite;
+    text-align: center;
 }
 
-.button:hover {
-    background: rgba(255,255,255,0.3);
-}
-
-.section {
-    margin: 20px 0;
-    color: #fff;
-}
-
+/* Toggle content */
 .toggle-content {
-    margin-top: 10px;
-    display: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
 }
 
+.toggle-content.show {
+    max-height: 200px;
+    opacity: 1;
+}
+
+/* Input */
 input[type="text"] {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
+    margin-top: 8px;
     border-radius: 15px;
     border: 1px solid rgba(255,255,255,0.3);
     background: rgba(255,255,255,0.1);
     color: #fff;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(8px);
+    font-size: 16px;
 }
 
+/* Ползунки */
 input[type="range"] {
     -webkit-appearance: none;
     width: 100%;
     height: 20px;
-    background: rgba(255,255,255,0.1);
     border-radius: 10px;
-    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(8px);
     margin-top: 10px;
 }
 
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    appearance: none;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -90,39 +95,78 @@ input[type="range"]::-webkit-slider-thumb:hover {
     background: rgba(255,255,255,0.7);
 }
 
+/* Чекбокс с эффектом */
 .checkbox-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+    user-select: none;
+    display: inline-block;
+}
+
+.checkbox-wrapper input {
+    position: absolute;
+    opacity: 0;
     cursor: pointer;
 }
 
-.checkbox-wrapper input[type="checkbox"] {
-    width: 25px;
+.checkbox-wrapper .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
     height: 25px;
-    border-radius: 8px;
+    width: 25px;
     background: rgba(255,255,255,0.2);
+    border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.5);
-    appearance: none;
-    position: relative;
+    transition: 0.3s;
+}
+
+.checkbox-wrapper input:checked ~ .checkmark {
+    background: rgba(255,255,255,0.5);
+}
+
+.checkbox-wrapper .checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-wrapper input:checked ~ .checkmark::after {
+    display: block;
+    left: 7px;
+    top: 3px;
+    width: 6px;
+    height: 12px;
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Анимации */
+@keyframes shimmer {
+    0% {background-position:0% 50%;}
+    50% {background-position:100% 50%;}
+    100% {background-position:0% 50%;}
+}
+
+@keyframes fadeIn {
+    0% {opacity:0; transform: translateY(-20px);}
+    100% {opacity:1; transform: translateY(0);}
+}
+
+.button.apply-button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 20px;
+    border: none;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
     cursor: pointer;
     transition: 0.3s;
 }
 
-.checkbox-wrapper input[type="checkbox"]:checked {
-    background: rgba(255,255,255,0.5);
-}
-
-.checkbox-wrapper input[type="checkbox"]:checked::after {
-    content: '✔';
-    position: absolute;
-    top: 1px;
-    left: 5px;
-    color: #000;
-    font-weight: bold;
-}
-
-.apply-button {
-    margin-top: 20px;
-    width: 100%;
+.button.apply-button:hover {
+    background: rgba(255,255,255,0.35);
 }
