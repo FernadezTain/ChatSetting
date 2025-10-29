@@ -163,36 +163,53 @@ function applySettings() {
 function showCommandModal(command) {
     const modalHtml = document.createElement('div');
     modalHtml.innerHTML = `
-        <div class="modal active" style="display:flex;">
-            <div class="modal-content glass-effect" style="max-width:500px;">
-                <button class="modal-close">×</button>
+        <div class="modal active" style="display:flex; z-index:1000;">
+            <div class="modal-content glass-effect" style="max-width:500px; text-align:center; padding:25px; border-radius:20px;">
+                <button class="modal-close" style="position:absolute; top:10px; right:15px; font-size:22px; background:none; border:none; color:white; cursor:pointer;">×</button>
                 <div class="modal-body">
                     <h3 style="margin-bottom: 15px; color: #00c6ff;">Команда настройки готова!</h3>
                     <p>Инструкция по установке:</p>
-                    <ol style="text-align:left; margin-bottom:15px;">
+                    <ol style="text-align:left; margin-bottom:15px; color:#ccc;">
                         <li>Скопируйте команду</li>
                         <li>Перейдите в бота <strong>@FernieUIBot</strong></li>
                         <li>Вставьте команду в личку бота</li>
                     </ol>
-                    <textarea readonly style="width:100%; font-family:monospace; padding:10px; border-radius:10px; margin-bottom:10px;" id="commandText">${command}</textarea>
-                    <button id="copyCommandBtn" style="padding:10px 20px; border:none; border-radius:20px; background:linear-gradient(90deg,#00c6ff,#0072ff); color:white; cursor:pointer;">📋 Скопировать команду</button>
+                    <textarea readonly 
+                        style="width:100%; font-family:monospace; padding:10px; border-radius:10px; margin-bottom:10px; resize:none;" 
+                        id="commandText">${command}</textarea>
+                    <div style="display:flex; flex-direction:column; gap:10px;">
+                        <button id="copyCommandBtn" 
+                            style="padding:10px 20px; border:none; border-radius:20px; background:linear-gradient(90deg,#00c6ff,#0072ff); color:white; cursor:pointer; transition:0.3s;">
+                            📋 Скопировать команду
+                        </button>
+                        <a href="https://t.me/FernieUIBot" target="_blank" 
+                            style="display:inline-block; text-decoration:none; padding:10px 20px; border-radius:20px; background:linear-gradient(90deg,#34d399,#059669); color:white; font-weight:500; transition:0.3s;">
+                            🤖 Перейти в бота
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     `;
     document.body.appendChild(modalHtml);
 
-    // Закрытие модалки
+    // Кнопка закрытия
     modalHtml.querySelector('.modal-close').addEventListener('click', () => {
         modalHtml.remove();
     });
 
-    // Кнопка копирования
+    // Кнопка "Скопировать команду"
     modalHtml.querySelector('#copyCommandBtn').addEventListener('click', () => {
         const text = modalHtml.querySelector('#commandText').value;
         copyToClipboard(text);
     });
+
+    // Закрытие по клику вне модалки
+    modalHtml.addEventListener('click', (e) => {
+        if (e.target === modalHtml) modalHtml.remove();
+    });
 }
+
 
 // ------------------------- Копирование в буфер обмена -------------------------
 function copyToClipboard(text) {
