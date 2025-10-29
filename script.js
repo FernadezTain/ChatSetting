@@ -105,7 +105,7 @@ function applySettings() {
         const command = `/change;token:${token}` +
             ` ;hitext:{${hiToggle && hiText ? hiText : "-"}}` +
             ` ;goodbyetext:{${byeToggle && byeText ? byeText : "-"}}` +
-            ` ;mailing:{${broadcastToggle ? "да" : "-"}}`;
+            ` ;mailing:{${broadcastToggle ? "yes" : "no"}}`;
 
         modal.classList.remove('active');
         showCommandModal(command);
