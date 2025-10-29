@@ -135,39 +135,24 @@ async function applySettings() {
     modal.classList.add('active');
 
     try {
-        // Собираем все настройки
         const settings = collectAllSettings();
-        
-        // Формируем строку параметров
         const paramsString = formatSettingsToParams(settings);
-        
-        // Кодируем для URL
         const encodedParams = encodeURIComponent(paramsString);
-        
-        // Формируем правильную ссылку для Telegram
-        const telegramUrl = `https://t.me/FernieUIBot?start=${encodedParams}`;
-        
-        console.log('Generated URL:', telegramUrl);
-        
-        // Ждем 3 секунды чтобы пользователь увидел анимацию загрузки
-        setTimeout(() => {
-            // Открываем ссылку в новом окне/вкладке
-            window.open(telegramUrl, '_blank');
-            
-            // Закрываем модальное окно
-            modal.classList.remove('active');
-            
-            // Показываем уведомление
-            showNotification('Настройки отправлены в бота! Откройте Telegram для завершения.');
-            
-        }, 3000);
 
+        console.log('Generated URL params:', encodedParams);
+
+        setTimeout(() => {
+            openTelegramBot(encodedParams);
+            modal.classList.remove('active');
+            showNotification('Настройки отправлены в бота! Откройте Telegram для завершения.');
+        }, 500); // чуть быстрее, чем 3 сек
     } catch (error) {
         console.error('Error applying settings:', error);
         modal.classList.remove('active');
         showNotification('Ошибка при отправке настроек. Попробуйте еще раз.', 'error');
     }
 }
+
 
 // ------------------------- Сбор всех настроек -------------------------
 function collectAllSettings() {
