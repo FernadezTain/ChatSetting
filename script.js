@@ -1,4 +1,21 @@
+// Флаг для отслеживания мобильного устройства
+let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+let isLowPerformance = false;
+
+// Проверяем производительность устройства
+function checkPerformance() {
+    const start = performance.now();
+    // Простой тест производительности
+    for (let i = 0; i < 1000; i++) {
+        Math.sqrt(i);
+    }
+    const duration = performance.now() - start;
+    isLowPerformance = duration > 2; // Если операция занимает больше 2мс, считаем устройство слабым
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    checkPerformance();
+    
     // Инициализация всех элементов управления
     initializeNavigation();
     initializeToggles();
@@ -12,6 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('modalClose').addEventListener('click', function() {
         document.getElementById('loadingModal').classList.remove('active');
     });
+    
+    // Оптимизация для мобильных: предотвращаем двойной тап для зума
+    document.addEventListener('touchstart', function(e) {
+        if (e.touches.length > 1) {
+            e.preventDefault();
+        }
+    }, { passive: false });
 });
 
 // Навигация между страницами
@@ -37,50 +61,56 @@ function initializeToggles() {
     const toggles = document.querySelectorAll('.toggle-switch');
     
     toggles.forEach(toggle => {
+        // Используем passive listeners для лучшей производительности
         toggle.addEventListener('click', function(e) {
-            const wasActive = this.classList.contains('active');
-            
-            if (!wasActive) {
-                // Активируем переключатель
-                this.classList.add('active');
-                
-                // Создаем частицы
-                createParticles(this, e);
-            } else {
-                // Деактивируем переключатель
-                this.classList.remove('active');
-            }
-            
-            // Находим соответствующий контент
-            const toggleId = this.id.replace('Toggle', 'Content');
-            const content = document.getElementById(toggleId);
-            
-            if (content) {
-                content.classList.toggle('active');
-            }
-            
-            // Проверяем валидность формы
-            validateForm();
-        });
+            handleToggleClick(this, e);
+        }, { passive: true });
     });
+}
+
+function handleToggleClick(toggle, e) {
+    const wasActive = toggle.classList.contains('active');
+    
+    if (!wasActive) {
+        // Активируем переключатель
+        toggle.classList.add('active');
+        
+        // Создаем частицы только если устройство не слабое
+        if (!isLowPerformance) {
+            createParticles(toggle, e);
+        }
+    } else {
+        // Деактивируем переключатель
+        toggle.classList.remove('active');
+    }
+    
+    // Находим соответствующий контент
+    const toggleId = toggle.id.replace('Toggle', 'Content');
+    const content = document.getElementById(toggleId);
+    
+    if (content) {
+        content.classList.toggle('active');
+    }
+    
+    // Проверяем валидность формы
+    validateForm();
 }
 
 // Создание частиц для анимации переключателя
 function createParticles(element, event) {
     const rect = element.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    
     const particlesContainer = element.querySelector('.toggle-particles');
     
-    // Создаем 8 частиц
-    for (let i = 0; i < 8; i++) {
+    // Уменьшаем количество частиц на мобильных
+    const particleCount = isMobile ? 4 : 8;
+    
+    for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.classList.add('particle');
         
         // Вычисляем направление частицы
-        const angle = (i / 8) * Math.PI * 2;
-        const distance = 30;
+        const angle = (i / particleCount) * Math.PI * 2;
+        const distance = isMobile ? 20 : 30;
         const tx = Math.cos(angle) * distance;
         const ty = Math.sin(angle) * distance;
         
@@ -96,7 +126,7 @@ function createParticles(element, event) {
             if (particle.parentNode === particlesContainer) {
                 particlesContainer.removeChild(particle);
             }
-        }, 600);
+        }, 400);
     }
 }
 
@@ -105,17 +135,30 @@ function initializeSliders() {
     const sliders = document.querySelectorAll('.liquid-slider');
     
     sliders.forEach(slider => {
-        const track = slider.querySelector('.slider-track');
-        const fill = slider.querySelector('.slider-fill');
-        const thumb = slider.querySelector('.slider-thumb');
-        const valueDisplay = slider.querySelector('.slider-value');
+        initializeSingleSlider(slider);
+    });
+}
+
+function initializeSingleSlider(slider) {
+    const track = slider.querySelector('.slider-track');
+    const fill = slider.querySelector('.slider-fill');
+    const thumb = slider.querySelector('.slider-thumb');
+    const valueDisplay = slider.querySelector('.slider-value');
+    
+    let isDragging = false;
+    let currentValue = 4;
+    let rafId = null;
+    
+    // Функция обновления позиции ползунка
+    function updateSliderPosition(percent) {
+        const boundedPercent = Math.max(0, Math.min(100, percent));
         
-        let isDragging = false;
-        let currentValue = 4; // Значение по умолчанию
+        // Используем requestAnimationFrame для плавности
+        if (rafId) {
+            cancelAnimationFrame(rafId);
+        }
         
-        // Функция обновления позиции ползунка
-        function updateSliderPosition(percent) {
-            const boundedPercent = Math.max(0, Math.min(100, percent));
+        rafId = requestAnimationFrame(() => {
             fill.style.width = `${boundedPercent}%`;
             thumb.style.left = `${boundedPercent}%`;
             
@@ -123,78 +166,81 @@ function initializeSliders() {
             currentValue = Math.round(1 + (boundedPercent / 100) * 6);
             valueDisplay.textContent = currentValue;
             
-            // Добавляем эффект жидкости
-            createLiquidEffect(track, boundedPercent);
-        }
-        
-        // Обработчик клика по треку
-        track.addEventListener('click', function(e) {
-            const rect = this.getBoundingClientRect();
-            const percent = ((e.clientX - rect.left) / rect.width) * 100;
-            updateSliderPosition(percent);
+            // Добавляем эффект жидкости только если устройство не слабое
+            if (!isLowPerformance) {
+                createLiquidEffect(track, boundedPercent);
+            }
         });
+    }
+    
+    // Обработчик клика по треку
+    track.addEventListener('click', function(e) {
+        const rect = this.getBoundingClientRect();
+        const percent = ((e.clientX - rect.left) / rect.width) * 100;
+        updateSliderPosition(percent);
+    }, { passive: true });
+    
+    // Обработчики для мыши
+    thumb.addEventListener('mousedown', startDrag);
+    document.addEventListener('mouseup', stopDrag);
+    
+    // Обработчики для тач-устройств
+    thumb.addEventListener('touchstart', startDrag, { passive: true });
+    document.addEventListener('touchend', stopDrag);
+    
+    function startDrag(e) {
+        isDragging = true;
+        document.addEventListener('mousemove', onDrag);
+        document.addEventListener('touchmove', onDrag, { passive: true });
+        e.preventDefault();
+    }
+    
+    function stopDrag() {
+        isDragging = false;
+        document.removeEventListener('mousemove', onDrag);
+        document.removeEventListener('touchmove', onDrag);
+        if (rafId) {
+            cancelAnimationFrame(rafId);
+        }
+    }
+    
+    function onDrag(e) {
+        if (!isDragging) return;
         
-        // Обработчики drag для thumb
-        thumb.addEventListener('mousedown', function(e) {
-            isDragging = true;
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-            e.preventDefault();
-        });
+        const rect = track.getBoundingClientRect();
+        let clientX;
         
-        thumb.addEventListener('touchstart', function(e) {
-            isDragging = true;
-            document.addEventListener('touchmove', onTouchMove);
-            document.addEventListener('touchend', onTouchEnd);
-            e.preventDefault();
-        });
-        
-        function onMouseMove(e) {
-            if (!isDragging) return;
-            const rect = track.getBoundingClientRect();
-            const percent = ((e.clientX - rect.left) / rect.width) * 100;
-            updateSliderPosition(percent);
+        if (e.type === 'touchmove') {
+            clientX = e.touches[0].clientX;
+        } else {
+            clientX = e.clientX;
         }
         
-        function onTouchMove(e) {
-            if (!isDragging) return;
-            const rect = track.getBoundingClientRect();
-            const touch = e.touches[0];
-            const percent = ((touch.clientX - rect.left) / rect.width) * 100;
-            updateSliderPosition(percent);
-        }
-        
-        function onMouseUp() {
-            isDragging = false;
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
-        }
-        
-        function onTouchEnd() {
-            isDragging = false;
-            document.removeEventListener('touchmove', onTouchMove);
-            document.removeEventListener('touchend', onTouchEnd);
-        }
-        
-        // Инициализация начальной позиции
-        updateSliderPosition(50); // 50% = значение 4
-    });
+        const percent = ((clientX - rect.left) / rect.width) * 100;
+        updateSliderPosition(percent);
+    }
+    
+    // Инициализация начальной позиции
+    updateSliderPosition(50);
 }
 
 // Инициализация валидации формы
 function initializeFormValidation() {
     const chatCodeInput = document.getElementById('chatCode');
     
+    // Используем debounce для оптимизации
+    let timeoutId;
     chatCodeInput.addEventListener('input', function() {
-        validateForm();
-    });
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(validateForm, 100);
+    }, { passive: true });
     
     // Также проверяем при изменении переключателей
     const toggles = document.querySelectorAll('.toggle-switch');
     toggles.forEach(toggle => {
         toggle.addEventListener('click', function() {
-            setTimeout(validateForm, 100);
-        });
+            setTimeout(validateForm, 50);
+        }, { passive: true });
     });
 }
 
@@ -347,20 +393,20 @@ function createLiquidEffect(track, percent) {
     // Создаем временный элемент для эффекта волны
     const wave = document.createElement('div');
     wave.style.position = 'absolute';
-    wave.style.width = '20px';
-    wave.style.height = '20px';
+    wave.style.width = isMobile ? '15px' : '20px';
+    wave.style.height = isMobile ? '15px' : '20px';
     wave.style.background = 'rgba(255, 255, 255, 0.3)';
     wave.style.borderRadius = '50%';
     wave.style.left = `${percent}%`;
     wave.style.top = '50%';
     wave.style.transform = 'translate(-50%, -50%) scale(0)';
-    wave.style.transition = 'transform 0.3s ease-out';
+    wave.style.transition = 'transform 0.2s ease-out';
     
     track.appendChild(wave);
     
     // Анимируем волну
     setTimeout(() => {
-        wave.style.transform = 'translate(-50%, -50%) scale(2)';
+        wave.style.transform = 'translate(-50%, -50%) scale(1.5)';
         wave.style.opacity = '0';
     }, 10);
     
@@ -369,5 +415,13 @@ function createLiquidEffect(track, percent) {
         if (wave.parentNode === track) {
             track.removeChild(wave);
         }
-    }, 300);
+    }, 200);
 }
+
+// Предотвращаем скролл страницы при взаимодействии с элементами
+document.addEventListener('touchmove', function(e) {
+    if (e.target.classList.contains('slider-thumb') || 
+        e.target.classList.contains('toggle-switch')) {
+        e.preventDefault();
+    }
+}, { passive: false });
