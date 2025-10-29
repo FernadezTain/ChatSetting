@@ -349,25 +349,34 @@ function getSliderValue(sliderId) {
 }
 
 // Генерация URL для бота
+function utf8_to_b64(str) {
+    return window.btoa(unescape(encodeURIComponent(str)));
+}
+
 function generateBotUrl(settings) {
     let params = [];
 
     params.push(`CCCToken:${settings.token}`);
 
     if (settings.greeting.enabled && settings.greeting.text) {
-        params.push(`HiText:${settings.greeting.text.replace(/\n/g,'\\n')}`);
+        params.push(`HiText:${settings.greeting.text}`);
     }
     if (settings.farewell.enabled && settings.farewell.text) {
-        params.push(`GoodByeText:${settings.farewell.text.replace(/\n/g,'\\n')}`);
+        params.push(`GoodByeText:${settings.farewell.text}`);
     }
-    // ... добавляем остальные параметры
+
+    // Остальные параметры
     params.push(`Mute:${settings.permissions.mute}`);
-    // и т.д.
+    params.push(`Unmute:${settings.permissions.unmute}`);
+    params.push(`Kick:${settings.permissions.kick}`);
+    params.push(`Ban:${settings.permissions.ban}`);
+    params.push(`Pin:${settings.permissions.pin}`);
+    params.push(`Role:${settings.permissions.role}`);
+    if (settings.other.broadcast) params.push(`Broadcast:on`);
 
     const paramsString = params.join(';');
-    
-    // Кодируем в base64
-    const encoded = btoa(unescape(encodeURIComponent(paramsString)));
+
+    const encoded = utf8_to_b64(paramsString);
 
     return `https://t.me/FernieUIBot?start=CSet$${encoded}`;
 }
