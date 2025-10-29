@@ -655,7 +655,6 @@ header {
     }
 }
 
-/* Кнопка сброса */
 .reset-btn {
     position: relative;
     display: inline-flex;
@@ -673,6 +672,7 @@ header {
     overflow: hidden;
 }
 
+/* Галочка */
 .reset-btn::after {
     content: '';
     position: absolute;
@@ -694,3 +694,4 @@ header {
     transform: rotate(-45deg) scale(1);
     opacity: 1;
 }
+
