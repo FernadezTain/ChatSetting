@@ -482,3 +482,46 @@ header {
         align-self: flex-end;
     }
 }
+/* Анимированное свечение для блоков настроек */
+.glass-effect::after {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    background: linear-gradient(270deg, #ffffff, #00c6ff, #9b5de5, #ffffff);
+    background-size: 600% 600%;
+    z-index: -2;
+    border-radius: 20px;
+    animation: glowAnimation 8s ease infinite;
+    opacity: 0.5;
+}
+
+/* Анимация свечения */
+@keyframes glowAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Анимированное свечение для кнопок переключателей */
+.toggle-switch::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: calc(100% + 10px);
+    height: calc(100% + 10px);
+    border-radius: 16px;
+    background: linear-gradient(270deg, #ffffff, #00c6ff, #9b5de5, #ffffff);
+    background-size: 400% 400%;
+    z-index: -1;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+    animation: glowAnimation 6s ease infinite;
+}
+
+.toggle-switch.active::before {
+    opacity: 1;
+}
